@@ -1,0 +1,186 @@
+<TimePickerPopup>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: '10dp'
+        spacing: '10dp'
+        
+        GridLayout:
+            cols: 3
+            rows: 4
+            spacing: '5dp'
+            size_hint_y: 0.7
+            
+            Button:
+                text: '1'
+                on_release: root.selected_time = self.text + ':00 ' + root.selected_time.split()[-1]
+            Button:
+                text: '2'
+                on_release: root.selected_time = self.text + ':00 ' + root.selected_time.split()[-1]
+            Button:
+                text: '3'
+                on_release: root.selected_time = self.text + ':00 ' + root.selected_time.split()[-1]
+            Button:
+                text: '4'
+                on_release: root.selected_time = self.text + ':00 ' + root.selected_time.split()[-1]
+            Button:
+                text: '5'
+                on_release: root.selected_time = self.text + ':00 ' + root.selected_time.split()[-1]
+            Button:
+                text: '6'
+                on_release: root.selected_time = self.text + ':00 ' + root.selected_time.split()[-1]
+            Button:
+                text: '7'
+                on_release: root.selected_time = self.text + ':00 ' + root.selected_time.split()[-1]
+            Button:
+                text: '8'
+                on_release: root.selected_time = self.text + ':00 ' + root.selected_time.split()[-1]
+            Button:
+                text: '9'
+                on_release: root.selected_time = self.text + ':00 ' + root.selected_time.split()[-1]
+            Button:
+                text: '10'
+                on_release: root.selected_time = self.text + ':00 ' + root.selected_time.split()[-1]
+            Button:
+                text: '11'
+                on_release: root.selected_time = self.text + ':00 ' + root.selected_time.split()[-1]
+            Button:
+                text: '12'
+                on_release: root.selected_time = self.text + ':00 ' + root.selected_time.split()[-1]
+        
+        BoxLayout:
+            orientation: 'horizontal'
+            spacing: '10dp'
+            
+            Spinner:
+                id: minutes
+                text: '00'
+                values: [f"{i:02d}" for i in range(0, 60, 5)]
+                on_text: root.selected_time = root.selected_time.split(':')[0] + ':' + self.text + ' ' + root.selected_time.split()[-1]
+            
+            Spinner:
+                id: ampm
+                text: 'AM'
+                values: ['AM', 'PM']
+                on_text: root.selected_time = root.selected_time.split()[0] + ' ' + self.text
+        
+        Label:
+            text: 'Selected Time: ' + root.selected_time
+            font_size: '20sp'
+            halign: 'center'
+        
+        Button:
+            text: 'Confirm'
+            size_hint_y: 0.2
+            background_color: 0.2, 0.6, 0.2, 1
+            on_release: root.confirm_time()
+
+<ToDoItem>:
+    orientation: 'horizontal'
+    size_hint_y: None
+    height: '80dp' if root.image_path else '58dp'
+    padding: '10dp'
+    spacing: '10dp'
+    
+    BoxLayout:
+        orientation: 'vertical'
+        size_hint_x: 0.7
+        spacing: '2dp'
+        
+        Label:
+            text: root.text
+            halign: 'left'
+            valign: 'middle'
+            text_size: self.width, None
+        
+        Label:
+            text: f"[color=8888ff]⏰ {root.task_time}[/color]"
+            halign: 'left'
+            valign: 'middle'
+            text_size: self.width, None
+            markup: True
+            font_size: '12sp'
+        
+        Image:
+            source: root.image_path if root.image_path else ''
+            size_hint_y: None
+            height: '50dp' if root.image_path else '0dp'
+            fit_mode: 'contain'  # This replaces both deprecated properties
+    
+    Button:
+        text: '🔔'
+        size_hint_x: 0.15
+        background_color: 1, 0.8, 0, 1
+        on_release: root.trigger_alarm()
+    
+    Button:
+        text: 'X'
+        size_hint_x: 0.15
+        background_color: 1, 0, 0, 1
+        on_release: root.delete_task()
+
+<ToDoList>:
+    orientation: 'vertical'
+    padding: '10dp'
+    spacing: '10dp'
+    
+    Label:
+        text: 'Wholesome To-Do List'
+        font_size: '24sp'
+        size_hint_y: None
+        height: '48dp'
+        color: 0.2, 0.4, 0.6, 1
+    
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: None
+        height: '48dp'
+        spacing: '10dp'
+        
+        TextInput:
+            id: task_input
+            hint_text: 'Task description...'
+            multiline: False
+            size_hint_x: 0.4
+    
+    BoxLayout:
+        orientation: 'horizontal'
+        size_hint_y: None
+        height: '48dp'
+        spacing: '10dp'
+        
+        Button:
+            id: time_btn
+            text: 'Select Time'
+            size_hint_x: 0.3
+            on_release: root.show_time_picker()
+        
+        Label:
+            id: selected_time
+            text: root.selected_time
+            halign: 'center'
+            size_hint_x: 0.3
+        
+        TextInput:
+            id: image_input
+            hint_text: 'Image path (optional)'
+            multiline: False
+            size_hint_x: 0.4
+    
+    Button:
+        text: 'Add Task'
+        size_hint_y: None
+        height: '48dp'
+        background_color: 0.2, 0.6, 0.2, 1
+        on_release: root.add_task()
+    
+    RecycleView:
+        id: rv
+        viewclass: 'ToDoItem'
+        data: [{'text': item['text'], 'task_time': item['time'], 'image_path': item.get('image', '')} for item in app.tasks]
+        
+        RecycleBoxLayout:
+            default_size: None, dp(80)
+            default_size_hint: 1, None
+            size_hint_y: None
+            height: self.minimum_height
+            orientation: 'vertical'
