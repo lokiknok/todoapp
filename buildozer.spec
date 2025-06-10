@@ -4,7 +4,7 @@
 title = DO NOW?
 
 # (str) Package name
-package.name = myapp
+package.name = do now?
 
 # (str) Package domain (needed for android/ios packaging)
 package.domain = org.test
